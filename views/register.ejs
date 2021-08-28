@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Register</title>
+  <link href="/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="/css/style.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+  <div style="margin-left: 520px;">
+    <h3>Customer Registration</h1>
+    <h4>Create an iService account</h2>
+    <div>
+      <p>Country of residence*</p>
+      <select name="country_residence" id="country_residence" style="margin-bottom: 10px; width: 400px;">
+        <option value="" disabled selected>Choose from list</option>
+        <option value="Sydney">Sydney</option>
+        <option value="Melbourne">Melbourne</option>
+        <option value="Canberra">Canberra</option>
+      </select>  
+    </div>
+
+    <div style="width: 400px;  height: 50px;">
+      <div style="float: left;">
+        <p>First name*</p>
+        <input type="text" name="first_name" id="first_name" style="width: 180px;">  
+      </div>
+
+      <div style="float: right;">
+        <p>Last name*</p>
+        <input type="text" name="last_name" id="last_name" style="width: 190px;">
+      </div>
+    </div>
+
+    <div>
+      <p>Email*</p>
+      <input type="text" name="email" id="email">  
+    </div>
+
+    <div>
+      <p>Password*</p>
+      <input type="password" name="password" id="password">        
+    </div>
+
+    <div>
+      <p>Confirm password*</p>
+      <input type="password" name="confirm_password" id="confirm_password">  
+    </div>
+
+    <div>
+      <p>Address*</p>
+      <input type="text" name="address_1" id="address_1" style="margin-bottom: 5px;">
+      <br>
+      <input type="text" name="address_2" id="address_2" style="margin-top: 0px;">
+    </div>
+
+    <div style="width: 400px; height: 50px;">
+      <div style="float: left;">
+        <p>City*</p>
+        <input type="text" name="city" id="city" style="width: 180px;">
+      </div>
+
+      <div style="float: right;">
+        <p>State, Province or Region*</p>
+        <input type="text" name="state_province_region" id="state_province_region" style="width: 190px;">
+      </div>
+    </div>
+
+    <div>
+      <p>ZIP&nbsp/&nbspPostal code</p>
+      <input type="text" name="zip_postal_code" id="zip_postal_code" />  
+    </div>
+
+    <div>
+      <p>Mobile phone number</p>
+      <input type="text" name="mobile_phone_number" id="mobile_phone_number" />
+    </div>
+
+    <input type="button" name="register" value="Create Account" id="register" />
+  </div>
+
+  <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+  <script>
+    function checkEmail(email) {
+      if(email.value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+      {
+        return true;
+      }
+      return false;
+    }
+
+    // post form by Ajax
+    $("#register").click(function () {
+      if($("#country_residence").val() == "" || $("#first_name").val() == "" || $("#last_name").val() == "" ||
+      $("#email").val() == "" || $("#password").val() == "" || ($("#address_1").val() == "" && $("#address_2").val() == "")
+       || $("#city").val() == "" || $("#state_province_region").val() == "") {
+        alert("The fileds with star cannot be empty!");
+      } else if ($("#password").val() != $("#confirm_password").val()) {
+        alert("The password and confirm password must be the same!");
+      } else if ($("#password").val().length < 8) {
+        alert("The length of password must be longer than 8!");
+      } else if (!checkEmail(email)) {
+        alert("The email is invalid!");
+      } else {
+        $.post("/doRegister", {
+          "customer_id": Date.now(),
+          "country_residence": $("#country_residence").val(),
+          "first_name": $("#first_name").val(),
+          "last_name": $("#last_name").val(),
+          "email": $("#email").val(),
+          "password": $("#password").val(),
+          "address": $("#address_1").val() + " " + $("#address_2").val(),
+          "city": $("#city").val(),
+          "state_province_region": $("#state_province_region").val(),
+          "zip_postal_code": $("#zip_postal_code").val(),
+          "mobile_phone_number": $("#mobile_phone_number").val()
+        }, function (result) {
+          if (result == 1) {
+            alert("Register Sucessfully!");
+          } else {
+            alert("Register Failed!");
+          }
+        });
+      }
+    })
+  </script>
+</body>
+
+</html>
